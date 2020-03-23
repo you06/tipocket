@@ -16,6 +16,7 @@ package stateflow
 import (
 	"github.com/pingcap/parser/ast"
 	"github.com/pingcap/parser/model"
+	"github.com/pingcap/parser/mysql"
 	tidbTypes "github.com/pingcap/tidb/types"
 	driver "github.com/pingcap/tidb/types/parser_driver"
 
@@ -225,7 +226,7 @@ func (s *StateFlow) walkValueExpr(node *driver.ValueExpr, table *types.Table, co
 	if column != nil {
 		switch column.DataType {
 		case "varchar", "text":
-			node.SetString(util.GenerateStringItem())
+			node.SetString(util.GenerateStringItem(), mysql.DefaultCollationName)
 			node.TexprNode.Type.Charset = "utf8mb4"
 			node.TexprNode.Type.Collate = "utf8mb4_bin"
 		case "int":
@@ -254,7 +255,7 @@ func (s *StateFlow) walkAssignmentList(list *[]*ast.Assignment, table *types.Tab
 				Table: model.NewCIStr(column.Table),
 				Name:  model.NewCIStr(column.Column),
 			},
-			Expr: ast.NewValueExpr(util.GenerateDataItem(column.DataType)),
+			Expr: ast.NewValueExpr(util.GenerateDataItem(column.DataType), mysql.DefaultCharset, mysql.DefaultCollationName),
 		}
 		*list = append(*list, &assignment)
 	}
@@ -293,9 +294,9 @@ func (s *StateFlow) makeList(columns []*types.Column) []ast.ExprNode {
 			continue
 		}
 		if column.Column == "uuid" {
-			list = append(list, ast.NewValueExpr(util.GetUUID()))
+			list = append(list, ast.NewValueExpr(util.GetUUID(), mysql.DefaultCharset, mysql.DefaultCollationName))
 		} else {
-			list = append(list, ast.NewValueExpr(util.GenerateDataItem(column.DataType)))
+			list = append(list, ast.NewValueExpr(util.GenerateDataItem(column.DataType), mysql.DefaultCharset, mysql.DefaultCollationName))
 		}
 	}
 	return list

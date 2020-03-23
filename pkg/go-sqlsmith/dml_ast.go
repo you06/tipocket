@@ -16,6 +16,7 @@ package sqlsmith
 import (
 	"github.com/pingcap/parser/ast"
 	"github.com/pingcap/parser/opcode"
+	"github.com/pingcap/parser/mysql"
 
 	"github.com/pingcap/tipocket/pkg/go-sqlsmith/util"
 )
@@ -66,7 +67,7 @@ func (s *SQLSmith) updateStmt() ast.Node {
 	if whereRand < 8 {
 		updateStmtNode.Where = s.binaryOperationExpr(whereRand, 0)
 	} else {
-		updateStmtNode.Where = ast.NewValueExpr(1)
+		updateStmtNode.Where = ast.NewValueExpr(1, mysql.DefaultCharset, mysql.DefaultCollationName)
 	}
 
 	return &updateStmtNode
@@ -94,7 +95,7 @@ func (s *SQLSmith) deleteStmt() ast.Node {
 	if whereRand < 8 {
 		deleteStmtNode.Where = s.binaryOperationExpr(whereRand, 0)
 	} else {
-		deleteStmtNode.Where = ast.NewValueExpr(1)
+		deleteStmtNode.Where = ast.NewValueExpr(1, mysql.DefaultCharset, mysql.DefaultCollationName)
 	}
 
 	return &deleteStmtNode
@@ -177,7 +178,7 @@ func (s *SQLSmith) binaryOperationExpr(depth, complex int) ast.ExprNode {
 				node.Op = opcode.EQ
 			}
 			node.L = &ast.ColumnNameExpr{}
-			node.R = ast.NewValueExpr(1)
+			node.R = ast.NewValueExpr(1, mysql.DefaultCharset, mysql.DefaultCollationName)
 		}
 	}
 	return &node
@@ -215,7 +216,7 @@ func (s *SQLSmith) exprNode(cons bool) ast.ExprNode {
 	default:
 		// hope there is an empty value type
 		if cons {
-			return ast.NewValueExpr(1)
+			return ast.NewValueExpr(1, mysql.DefaultCharset, mysql.DefaultCollationName)
 		}
 		return &ast.ColumnNameExpr{}
 	}
