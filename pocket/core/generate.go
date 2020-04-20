@@ -32,7 +32,9 @@ func (c *Core) generate(ctx context.Context, readyCh *chan struct{}) error {
 		return errors.Trace(err)
 	}
 
-	log.Info("init done, start generate")
+	if c.cfg.Options.InitTable > 0 {
+		log.Info("init done, start generate")
+	}
 	*readyCh <- struct{}{}
 	c.runGenerateSQL(ctx)
 	return nil

@@ -35,7 +35,7 @@ func New(logPath string, mute bool) (*Logger, error) {
 	logger := Logger{
 		logPath: logPath,
 		print:   logPath == "",
-		mute:    mute,
+		mute:    true,
 	}
 
 	return logger.init()
