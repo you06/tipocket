@@ -13,14 +13,14 @@
 
 package util
 
-
 import (
 	"fmt"
-	"time"
 	"strings"
+	"time"
+
 	"github.com/pingcap/parser/mysql"
 	tidbTypes "github.com/pingcap/tidb/types"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 // GetUUID return uuid
@@ -69,12 +69,14 @@ func GenerateDataItemString(columnType string) string {
 func GenerateDataItem(columnType string) interface{} {
 	var res interface{}
 	switch columnType {
-	case "varchar":
+	case "varchar", "char":
 		res = GenerateStringItem()
-	case "text":
+	case "text", "mediumtext":
 		res = GenerateStringItem()
-	case "int":
+	case "int", "bigint":
 		res = GenerateIntItem()
+	case "tinyint":
+		res = GenerateTinyIntItem()
 	case "timestamp", "datetime":
 		res = GenerateTiDBDateItem()
 	case "float":
@@ -91,6 +93,11 @@ func GenerateStringItem() string {
 // GenerateIntItem generate int item
 func GenerateIntItem() int {
 	return Rd(2147483647)
+}
+
+// GenerateIntItem generate int item
+func GenerateTinyIntItem() int {
+	return Rd(10)
 }
 
 // GenerateFloatItem generate float item

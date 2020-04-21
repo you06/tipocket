@@ -14,8 +14,10 @@
 package core
 
 import (
-	"github.com/juju/errors"
+	"fmt"
 	"time"
+
+	"github.com/juju/errors"
 
 	"github.com/pingcap/tipocket/pocket/executor"
 	"github.com/pingcap/tipocket/pocket/pkg/types"
@@ -31,7 +33,9 @@ func (c *Core) execute(e *executor.Executor, sql *types.SQL) {
 			c.Unlock()
 		}()
 	}
-	_ = e.ExecSQL(sql)
+	if err := e.ExecSQL(sql); err != nil {
+		fmt.Println(err)
+	}
 	c.lockWatchCh <- e.GetID()
 }
 
