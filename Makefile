@@ -62,6 +62,9 @@ txnkv:
 verifier:
 	$(GOBUILD) $(GOMOD) -o bin/chaos-verifier cmd/verifier/main.go
 
+raw-pocket:
+	$(GOBUILD) $(GOMOD) -o bin/raw-pocket cmd/raw-pocket/*.go
+
 pocket:
 	$(GOBUILD) $(GOMOD) -o bin/pocket cmd/pocket/*.go
 

@@ -33,6 +33,7 @@ var (
 		`SET @@GLOBAL.TIDB_TXN_MODE="pessimistic"`,
 		`SET @@GLOBAL.explicit_defaults_for_timestamp=1`,
 	}
+	RCIsolation = `SET GLOBAL tx_isolation='READ-COMMITTED'`
 )
 
 func removeDSNSchema(dsn string) string {
@@ -68,6 +69,11 @@ func (c *Core) mustExec() error {
 	}
 	for _, sql := range mustExecSQLs {
 		if err := c.coreExec.Exec(sql); err != nil {
+			return errors.Trace(err)
+		}
+	}
+	if c.cfg.Options.Isolation == "rc" {
+		if err := c.coreExec.Exec(RCIsolation); err != nil {
 			return errors.Trace(err)
 		}
 	}

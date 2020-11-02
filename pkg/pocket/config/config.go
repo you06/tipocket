@@ -37,6 +37,7 @@ type Options struct {
 	GeneralLog    bool           `toml:"general-log"`
 	SyncTimeout   types.Duration `toml:"check-duration"`
 	EnableHint    bool           `toml:"enable-hint"`
+	Isolation     string         `toml:"isolation"`
 }
 
 // Generator Config

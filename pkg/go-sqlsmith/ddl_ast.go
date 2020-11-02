@@ -91,12 +91,21 @@ func (s *SQLSmith) alterTableSpecDropColumn() *ast.AlterTableSpec {
 }
 
 func (s *SQLSmith) createIndexStmt() *ast.CreateIndexStmt {
-	var indexType model.IndexType
+	var (
+		indexType model.IndexType
+		keyType   ast.IndexKeyType
+	)
 	switch util.Rd(2) {
 	case 0:
 		indexType = model.IndexTypeBtree
 	default:
 		indexType = model.IndexTypeHash
+	}
+	switch util.Rd(2) {
+	case 0:
+		keyType = ast.IndexKeyTypeNone
+	default:
+		keyType = ast.IndexKeyTypeUnique
 	}
 
 	node := ast.CreateIndexStmt{
@@ -105,6 +114,7 @@ func (s *SQLSmith) createIndexStmt() *ast.CreateIndexStmt {
 		IndexOption: &ast.IndexOption{
 			Tp: indexType,
 		},
+		KeyType: keyType,
 	}
 	return &node
 }
